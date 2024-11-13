@@ -1,12 +1,33 @@
 import React, { useState } from 'react';
+import useDarkMode from './useDarkMode';
+import licznikint from './licznikint';
+import counter from './counter'; // Importuj komponent Counter
 
-function App() {
+const ThemeToggle = () => {
+    const { theme, toggleTheme } = useDarkMode();
+    return (
+        <div
+            style={{
+                background: theme === 'dark' ? '#000' : '#fff',
+                color: theme === 'dark' ? '#fff' : '#000',
+                padding: '10px',
+                margin: '20px 0',
+            }}
+        >
+            <button type="button" onClick={toggleTheme}>
+                Przełącz na {theme === 'dark' ? 'jasny' : 'ciemny'} motyw {/*przelaczanie motywu z jasnego na ciemny, funkcja znajduje sie w pliku useDarkMode.js*/}
+            </button>
+        </div>
+    );
+};
+
+const App = () => {
     const fixedDate = new Date('1900-03-23');
     const [result, setResult] = useState('');
+    const { count, startCount, stopCount } = licznikint(10); // Countdown ze startowym czasem 10 sekund
 
     const calculateDifference = () => {
         const today = new Date();
-
         let years = today.getFullYear() - fixedDate.getFullYear();
         let months = today.getMonth() - fixedDate.getMonth();
         let days = today.getDate() - fixedDate.getDate();
@@ -18,7 +39,6 @@ function App() {
             days += lastMonth.getDate();
         }
 
-
         if (months < 0) {
             years--;
             months += 12;
@@ -28,12 +48,28 @@ function App() {
     };
 
     return (
+
         <div style={{ padding: '20px' }}>
-            <h1>Oblicz różnicę czasu</h1>
-            <button onClick={calculateDifference}>Oblicz</button>
+            <h1>Podstawowa aplikacja testowa</h1>
+            <counter /> {/* Dodanie komponentu licznika */}
+            <div>
+                <p>Odmierzanie: {count}</p>
+                <button onClick={startCount}>Rozpocznij odmierzanie</button> {/*po kliknieciu przycisku zaczyna sie odliczanie od ustalonej liczby do 0*/}
+                <button onClick={stopCount}>Zatrzymaj odmierzanie</button>
+            </div>
+            <button onClick={calculateDifference}>Oblicz różnicę</button>
             <p>{result}</p>
         </div>
     );
-}
+};
 
-export default App;
+const MainApp = () => {
+    return (
+        <div>
+            <ThemeToggle />
+            <App />
+        </div>
+    );
+};
+
+export default MainApp;
